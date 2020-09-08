@@ -2,3 +2,5 @@
 /hello-world
 /.vscode
 /.DS_Store
+/backend/.DS_Store
+/backend/__pycache__
