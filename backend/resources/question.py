@@ -1,5 +1,6 @@
 from flask_restful import Resource, reqparse
 from models.question import QuestionModel
+from models.quiz import QuizModel
 
 class Question(Resource):
     parser = reqparse.RequestParser()
@@ -11,7 +12,7 @@ class Question(Resource):
     parser.add_argument('quiz_id',
         type=int,
         required=True,
-        help="Every item need a store id"
+        help="Every question needs a quiz id"
     )
     
     def get(self, _id):
@@ -40,5 +41,11 @@ class Question(Resource):
 
 class QuestionList(Resource):
     def get(self):
-        return {'Question' : [question.json() for question in QuestionModel.query.all()]}
+        return {'Questions' : [question.json() for question in QuestionModel.query.all()]}
         
+class QuizQuestions(Resource):
+    def get(self, _id):
+        quiz = QuizModel.find_by_id(_id).json()
+        if quiz:
+            return {'Questions' : quiz['questions']}, 201
+        return {'message' : 'Question not found'}, 404

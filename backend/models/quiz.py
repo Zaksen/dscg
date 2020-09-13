@@ -14,7 +14,7 @@ class QuizModel(db.Model):
         self.theme = theme
 
     def json(self):
-        return {'name':self.name, 'questions':[question.json() for question in self.questions.all()], 'theme':self.theme}
+        return {'id':self.id, 'name':self.name, 'questions':[question.json() for question in self.questions.all()], 'theme':self.theme}
 
     @classmethod
     def find_by_id(cls, _id):

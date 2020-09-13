@@ -2,7 +2,7 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_jwt import JWT, current_identity
 from resources.user import UserRegister
-from resources.question import Question, QuestionList
+from resources.question import Question, QuestionList, QuizQuestions
 from resources.option import Option
 from resources.quiz import Quiz, QuizList
 from security import authenticate, identity
@@ -22,10 +22,16 @@ jwt = JWT(app, authenticate, identity)
 def create_tables():
     db.create_all()
 
-api.add_resource(Option, '/question/option/<int:_id>')
-api.add_resource(QuestionList, '/<int:_id>/questions')
-api.add_resource(UserRegister, '/register')
 api.add_resource(QuizList , '/quizzes')
-api.add_resource(Quiz, '/quiz/<int:_id>')
+api.add_resource(Quiz, '/quiz/<int:_id>', '/quiz/new')
+
+api.add_resource(Question, '/question/<int:_id>', '/question/new')
+api.add_resource(QuestionList, '/questions')
+api.add_resource(QuizQuestions, '/<int:_id>/questions')
+
+api.add_resource(Option, '/question/option/<int:_id>')
+
+api.add_resource(UserRegister, '/register')
+
 if __name__ == '__main__':
     app.run(debug=True)  # important to mention debug=True
