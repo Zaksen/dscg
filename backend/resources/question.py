@@ -21,16 +21,6 @@ class Question(Resource):
             return question.json()
         return {'message' : 'Question not found'}, 404
 
-    def post(self):
-        data = Question.parser.parse_args()
-        question = QuestionModel(**data)
-        try:
-            question.save_to_db()
-        except:
-            return {'message' : 'internal error'}, 500
-
-        return question.json(), 201
-
 
     def delete(self, name):
         question = QuestionModel.find_by_name(name)
@@ -42,10 +32,28 @@ class Question(Resource):
 class QuestionList(Resource):
     def get(self):
         return {'Questions' : [question.json() for question in QuestionModel.query.all()]}
+
+
+class QuestionPost(Resource):
+    parser = reqparse.RequestParser()
+    parser.add_argument('label',
+        type=str,
+        required=True,
+        help="This field cannot be left blank!"
+    )
+    parser.add_argument('quiz_id',
+        type=int,
+        required=True,
+        help="Every question needs a quiz id"
+    )
+
+    def post(self):
+        data = QuestionPost.parser.parse_args()
+        question = QuestionModel(**data)
+        try:
+            question.save_to_db()
+        except:
+            return {'message' : 'internal error'}, 500
+
+        return question.json(), 201
         
-class QuizQuestions(Resource):
-    def get(self, _id):
-        quiz = QuizModel.find_by_id(_id).json()
-        if quiz:
-            return {'Questions' : quiz['questions']}, 201
-        return {'message' : 'Question not found'}, 404

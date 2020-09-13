@@ -2,9 +2,9 @@ from flask import Flask
 from flask_restful import Resource, Api
 from flask_jwt import JWT, current_identity
 from resources.user import UserRegister
-from resources.question import Question, QuestionList, QuizQuestions
+from resources.question import Question, QuestionList, QuestionPost
 from resources.option import Option
-from resources.quiz import Quiz, QuizList
+from resources.quiz import Quiz, QuizList, QuizPost
 from security import authenticate, identity
 from db import db
 
@@ -23,11 +23,13 @@ def create_tables():
     db.create_all()
 
 api.add_resource(QuizList , '/quizzes')
-api.add_resource(Quiz, '/quiz/<int:_id>', '/quiz/new')
+api.add_resource(QuizPost, '/quiz/new')
+api.add_resource(Quiz, '/quiz/<int:_id>')
 
-api.add_resource(Question, '/question/<int:_id>', '/question/new')
 api.add_resource(QuestionList, '/questions')
-api.add_resource(QuizQuestions, '/<int:_id>/questions')
+api.add_resource(QuestionPost, '/question/new')
+api.add_resource(Question, '/question/<int:_id>')
+
 
 api.add_resource(Option, '/question/option/<int:_id>')
 
